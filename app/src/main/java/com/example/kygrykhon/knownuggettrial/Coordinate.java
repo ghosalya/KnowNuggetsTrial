@@ -15,14 +15,22 @@ public class Coordinate {
     private String longitude;
 
 
-    public final double _latitude, _longitude;
+    public float _latitude, _longitude;
     public static int R = 6371;
 
     public Coordinate(String lat, String longg) {
         latitude = lat;
         longitude = longg;
-        _latitude = Double.parseDouble(lat);
-        _longitude = Double.parseDouble(longg);
+    }
+
+    public String toString() {
+        parseData();
+        return "Latitude:"+latitude+"("+_latitude+")"+" Longitude:"+longitude+"("+_longitude+")";
+    }
+
+    public void parseData() {
+        _latitude = Float.parseFloat(latitude);
+        _longitude = Float.parseFloat(longitude);
     }
 
     public double distanceTo(Coordinate b) {
@@ -30,6 +38,8 @@ public class Coordinate {
     }
 
     public static double getDistance(Coordinate a, Coordinate b) {
+        a.parseData();
+        b.parseData();
         double dLat = Math.toRadians(a._latitude - b._latitude);
         double dLong = Math.toRadians(a._longitude - b._longitude);
         double m = Math.pow(Math.sin(dLat/2),2)

@@ -28,11 +28,20 @@ class APIPermKey {
     @SerializedName("permKey")
     private String permKey;
 
-    public APIPermKey(String permKey) {
-        this.permKey = permKey;
-    }
+    public APIPermKey(String permKey) { this.permKey = permKey;  }
 
     public String getPermKey() {
         return permKey;
+    }
+}
+
+class APITempKey {
+    @SerializedName("tempKey")
+    private String tempKey;
+
+    public APITempKey(String tempKey) { this.tempKey = tempKey;}
+
+    public static APITempKey get(String temp) {
+        return new APITempKey(temp);
     }
 }

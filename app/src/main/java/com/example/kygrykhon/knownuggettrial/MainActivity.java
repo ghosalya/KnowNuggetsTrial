@@ -34,12 +34,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public synchronized void coordinateSet(Coordinate coor) {
+        //System.out.println("COORDINATE GET! "+coor.toString());
         if(coor1 == null) coor1 = coor;
         else if (coor2 == null) coor2 = coor;
 
         if(coor1 != null && coor2!=null) { //finished fetching 2 coordinates
             if(dialog!=null) {
                 dialog.setProgress(dialog.getMax());
+                dialog.dismiss();
             }
 
             double distance = coor1.distanceTo(coor2);
@@ -51,22 +53,23 @@ public class MainActivity extends AppCompatActivity {
     public void getDistance(View view) {
         coor1 = null;
         coor2 = null;
-        dialog = ProgressDialog.show(getApplicationContext(), "Getting distance..", "Please wait while we fetch coordinates..", true );
+        dialog = ProgressDialog.show(view.getContext(), "Getting distance..", "Please wait while we fetch coordinates..", true );
         acquireCoordinate();
         acquireCoordinate();
     }
 
     private void acquirePermanentKey() {
-        Call<APIPermKey> call = apiService.getPermanentKey(temporaryKey);
+        Call<APIPermKey> call = apiService.getPermanentKey(APITempKey.get(temporaryKey));
         call.enqueue(new Callback<APIPermKey>() {
             @Override
             public void onResponse(Call<APIPermKey> call, Response<APIPermKey> response) {
-                //permanentKey = response.body().getPermKey();
                 permanentKey = response.body();
                 if(permanentKey!=null) {
                     Log.d("getKeySuccess", "Permanent Key get!" + permanentKey);
+                    //System.out.println("Permanent Key get!" + permanentKey.getPermKey());
                 } else {
                     Log.d("getKeyNull", "Get a null key object");
+                    //System.out.println("Permanent Key null!");
                 }
             }
 
@@ -78,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void acquireCoordinate() {
-        Call<Coordinate> call = apiService.getCoordinate(permanentKey.getPermKey());
+        Call<Coordinate> call = apiService.getCoordinate(permanentKey);
 
         call.enqueue(new Callback<Coordinate>() {
             @Override
